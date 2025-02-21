@@ -4,7 +4,6 @@ import requests
 import logging
 from hotmart_python import Hotmart
 from werkzeug.serving import WSGIRequestHandler
-from pyngrok import ngrok  # Para criar o túnel público com ngrok
 from flask_cors import CORS  # Para configurar o CORS
 
 WSGIRequestHandler.protocol_version = "HTTP/1.1" 
@@ -20,12 +19,13 @@ CORS(app, supports_credentials=True)
 # Função para conectar ao banco de dados SQLite
 def get_db_connection():
     conn = sqlite3.connect('meu_banco.db')
-    conn.row_factory = sqlite3.Row  # Para que possamos acessar as colunas pelo nome
+    conn.row_factory = sqlite3.Row  # Permite acessar as colunas pelo nome
     return conn
 
 FACEBOOK_APP_ID = "583564801061673"
 FACEBOOK_APP_SECRET = "8a7513d13320c4097bd4a99ef6e11c68"
-FACEBOOK_REDIRECT_URI = None  # Será configurado dinamicamente após iniciar o ngrok
+# Agora a URL de redirecionamento é fixa, conforme o deploy na Vercel:
+FACEBOOK_REDIRECT_URI = "https://backend-nakazawa.vercel.app/callback"
     
 @app.route('/api/cadastrar-empresa-cliente', methods=['POST'])
 def cadastrar_empresa_cliente():
@@ -1755,9 +1755,7 @@ def get_report_insights():
         return jsonify({'error': f'Erro na requisição ao Facebook: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    # Estabelecendo o URL do redirect dinamicamente com ngrok
-    FACEBOOK_REDIRECT_URI = ngrok.connect(5000).public_url + '/callback'
     print(f"URL de redirecionamento do Facebook configurado: {FACEBOOK_REDIRECT_URI}")
-    
-    # Inicializa o Flask
+    # Em ambiente de produção na Vercel, o servidor é gerenciado pela plataforma,
+    # portanto, o app.run() não será chamado.
     app.run(host="0.0.0.0", debug=True, use_reloader=False)
