@@ -25,7 +25,7 @@ def get_db_connection():
 FACEBOOK_APP_ID = "583564801061673"
 FACEBOOK_APP_SECRET = "8a7513d13320c4097bd4a99ef6e11c68"
 # Agora a URL de redirecionamento é fixa, conforme o deploy na Vercel:
-FACEBOOK_REDIRECT_URI = "https://backend-nakazawa-7e57p2ojr-devnonimates-projects.vercel.app/callback"
+FACEBOOK_REDIRECT_URI = "https://backend-nakazawa.vercel.app/callback"
     
 @app.route('/api/cadastrar-empresa-cliente', methods=['POST'])
 def cadastrar_empresa_cliente():
